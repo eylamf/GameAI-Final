@@ -1,6 +1,11 @@
 class Cell {
   public int type, row, col, x, y;
   
+  public Cell(int r, int c) {
+    this.row = r;
+    this.col = c;
+  }
+  
   public Cell(int t, int r, int c, int x, int y) {
     this.type = t;
     this.row = r;
@@ -32,10 +37,14 @@ class Cell {
     if (this.isPellet() || this.isTurnBlock()) {
       fill(WHITE);
       ellipse(this.x, this.y, 3, 3);
-    } else if (this.isFruit()) {
+    } else if (this.isPowerPellet()) {
       fill(WHITE);
       ellipse(this.x, this.y, 10, 10);
     }
+  }
+  
+  public void setType(int t) {
+    this.type = t; 
   }
   
   public boolean isWall() {
@@ -46,8 +55,8 @@ class Cell {
     return this.type == PELLET; 
   }
   
-  public boolean isFruit() {
-   return this.type == FRUIT;
+  public boolean isPowerPellet() {
+   return this.type == POWER_PELLET;
   }
   
   public boolean isEmpty() {

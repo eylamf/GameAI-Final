@@ -9,7 +9,7 @@ public static final int TURN_BLOCK = 4;
 public static final int EMPTY = 3;
 public static final int WALL = 0;
 public static final int PELLET = 1;
-public static final int FRUIT = 2;
+public static final int POWER_PELLET = 2;
 
 public static final int CHASING = 1;
 public static final int FRIGHTENED = 2;
@@ -17,19 +17,28 @@ public static final int SCATTER = 3;
 
 public final color WHITE = color(255, 255, 255);
 public final color BLACK = color(0, 0, 0);
-public final color BLUE = color(61, 45, 237);
+public final color BLUE = color(26, 53, 175);
 public final color YELLOW = color(252, 235, 53);
 public final color RED = color(244, 75, 66);
 public final color PINK = color(255, 81, 205);
 public final color ORANGE = color(255, 182, 81);
+public final color LIGHT_BLUE = color(94, 239, 249);
 
 boolean DEBUG = false;
+public ArrayList<Cell> POWER_PELLET_POSNS;
 
 Game game;
 
 void setup() {
   size(561, 621);
-  frameRate(90); 
+  frameRate(90);
+  
+  POWER_PELLET_POSNS = new ArrayList();
+  POWER_PELLET_POSNS.add(new Cell(3, 1));
+  POWER_PELLET_POSNS.add(new Cell(3, 26));
+  POWER_PELLET_POSNS.add(new Cell(22, 1));
+  POWER_PELLET_POSNS.add(new Cell(22, 26));
+  
   game = new Game();
 }
 

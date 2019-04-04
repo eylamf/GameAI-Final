@@ -19,15 +19,21 @@ abstract class Ghost {
   public abstract void scatter();
   
   public void render(color c) {
-     fill(c, this.alpha);
-     stroke(c);
-     strokeWeight(2);
-     rect(this.posn.x, this.posn.y, INCREMENT, INCREMENT, INCREMENT, INCREMENT, 2, 2);
+    if (game.mode == FRIGHTENED) {
+      fill(BLUE, this.alpha);
+      stroke(BLUE);
+    } else {
+      fill(c, this.alpha);
+      stroke(c);
+    }
+    
+    strokeWeight(2);
+    rect(this.posn.x, this.posn.y, INCREMENT, INCREMENT, INCREMENT, INCREMENT, 2, 2);
      
-     strokeWeight(3);
-     for (Node n : this.path) {
-       n.renderPath(c, this.alpha); 
-     }
+    strokeWeight(3);
+    for (Node n : this.path) {
+      n.renderPath(c, this.alpha); 
+    }
   }
   
   protected void move() {
@@ -42,7 +48,7 @@ abstract class Ghost {
   }
   
   protected void moveRandomly() {
-    
+   
   }
   
   public boolean isMovingRight() {

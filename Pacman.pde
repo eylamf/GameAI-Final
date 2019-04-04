@@ -26,9 +26,18 @@ class Pacman {
   
   public void move() {
     
+    if (!this.willHitWall()) {
+      this.posn.add(this.orientation); 
+    }
+    
     if (this.isOnCell()) {
       this.row = convertYtoR((int) this.posn.y);
       this.col = convertXtoC((int) this.posn.x);
+      
+      if (this.didEatPowerPellet()) {
+        game.setMode(FRIGHTENED);
+        game.board.getCellAt(this.row, this.col).setType(EMPTY);
+      }
     }
     
     Cell[][] surroundings = this.getNearbyCells();
@@ -54,17 +63,8 @@ class Pacman {
             this.attemptTurn(); 
           }
         }
-      } else {
-        if (!this.willHitWall()) {
-          this.posn.add(this.orientation); 
-        }
       }
-    } else {
-      if (!this.willHitWall()) {
-          this.posn.add(this.orientation); 
-        }
     }
-    
   }
   
   public void attemptTurn() {
@@ -265,9 +265,21 @@ class Pacman {
     }
   }
   
-  private boolean isOnCell() {
+  private boolean didEatPowerPellet() {
+    Cell current = new Cell(this.row, this.col);
     
-    return Math.abs(this.posn.x - this.initX) % 20 == 0 && Math.abs(this.posn.y - this.initY) % 20 == 0;
+    for (Cell cell : POWER_PELLET_POSNS) {
+      if (current.equals(cell)) {
+        return true;
+      }
+    }
+    
+    return false;
+  }
+  
+  private boolean isOnCell() {
+    return Math.abs(this.initX - (int) this.posn.x) % INCREMENT == 0
+    && Math.abs(this.initY - (int) this.posn.y) % INCREMENT == 0;
   }
   
   private boolean isOnTurnBlock() {

@@ -27,4 +27,8 @@ class Game {
     this.pinky.move();
     this.clyde.move();
   }
+  
+  public void setMode(int m) {
+    this.mode = m; 
+  }
 }
