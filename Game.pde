@@ -5,6 +5,7 @@ class Game {
   public Blinky blinky;
   public Pinky pinky;
   public Clyde clyde;
+  public Inky inky;
   
   public Game() {
     this.mode = CHASING;
@@ -13,6 +14,7 @@ class Game {
     this.blinky = new Blinky();
     this.pinky = new Pinky();
     this.clyde = new Clyde();
+    this.inky = new Inky();
   }
   
   public void render() {
@@ -20,12 +22,14 @@ class Game {
     this.blinky.render();
     this.pinky.render();
     this.clyde.render();
+    this.inky.render();
     this.pacman.render();
     
     this.pacman.move();
     this.blinky.move();
     this.pinky.move();
     this.clyde.move();
+    this.inky.move();
   }
   
   public void setMode(int m) {

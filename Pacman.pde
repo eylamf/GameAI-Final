@@ -36,7 +36,14 @@ class Pacman {
       
       if (this.didEatPowerPellet()) {
         game.setMode(FRIGHTENED);
-        game.board.getCellAt(this.row, this.col).setType(EMPTY);
+      }
+      
+      Cell current = game.board.getCellAt(this.row, this.col);
+      
+      if (current.isTurnBlock()) {
+        current.setType(EATEN_TURN_BLOCK);
+      } else if (current.isPellet() || current.isPowerPellet()) {
+        current.setType(EMPTY); 
       }
     }
     

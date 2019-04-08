@@ -27,10 +27,12 @@ class Clyde extends Ghost {
   
   @Override
   public void createPath() {
-    if (this.isLessThanEightAway()) {
-      this.path = aStar(29, 1, this.row, this.col);
-    } else {
-      this.path = aStar(game.pacman.row, game.pacman.col, this.row, this.col);   
+    if (this.isOnCell()) {
+      if (this.isLessThanEightAway()) {
+        this.path = aStar(29, 1, this.row, this.col);
+      } else {
+        this.path = aStar(game.pacman.row, game.pacman.col, this.row, this.col);   
+      } 
     }
   }
   
@@ -40,30 +42,26 @@ class Clyde extends Ghost {
       if (this.path.get(i).x == this.posn.x && this.path.get(i).y == this.posn.y) {
         Node next = this.path.get(i + 1);
         
-        float x = 0;
-        float y = 0;
+        float vx = 0;
+        float vy = 0;
         
         if (next.x < this.posn.x) {
-          x = -1;
+          vx = -1;
           this.col--;
         } else if (next.x > this.posn.x) {
-          x = 1;
+          vx = 1;
           this.col++;
         }
         
         if (next.y < this.posn.y) {
-          y = -1;
+          vy = -1;
           this.row--;
         } else if (next.y > this.posn.y) {
-          y = 1;
+          vy = 1;
           this.row++;
         }
         
-        if (this.row == 29 && this.col == 1) {
-          this.orientation = new PVector(0, 0);
-        } else {
-          this.orientation = new PVector(x, y);
-        }
+        this.orientation = new PVector(vx, vy);
         
         break;
       }

@@ -19,7 +19,9 @@ class Blinky extends Ghost {
   
   @Override
   public void createPath() {
-    this.path = aStar(game.pacman.row, game.pacman.col, this.row, this.col);
+    if (this.isOnCell()) {
+      this.path = aStar(game.pacman.row, game.pacman.col, this.row, this.col); 
+    }
   }
   
   @Override

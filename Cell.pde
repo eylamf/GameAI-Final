@@ -25,8 +25,12 @@ class Cell {
       fill(BLUE);
     } else {
       
-      if (DEBUG && this.isTurnBlock() || this.isEatenTurnBlock()) {
-        fill(WHITE); 
+      if (this.isTurnBlock() || this.isEatenTurnBlock()) {
+        if (DEBUG) {
+          fill(WHITE); 
+        } else {
+          fill(BLACK); 
+        }
       } else {
         fill(BLACK); 
       }

@@ -19,30 +19,32 @@ class Pinky extends Ghost {
   
   @Override
   public void createPath() {
-    Cell[][] surroundings = game.pacman.getSurroundingCells();
+    if (this.isOnCell()) {
+      Cell[][] surroundings = game.pacman.getSurroundingCells();
     
-    int r = game.pacman.row;
-    int c = game.pacman.col;
-    
-    if (game.pacman.isMovingRight()) {
-      if (surroundings[4][8] != null && !surroundings[4][8].isWall()) {
-        c = surroundings[4][8].col;
+      int r = game.pacman.row;
+      int c = game.pacman.col;
+      
+      if (game.pacman.isMovingRight()) {
+        if (surroundings[4][8] != null && !surroundings[4][8].isWall()) {
+          c = surroundings[4][8].col;
+        }
+      } else if (game.pacman.isMovingLeft()) {
+        if (surroundings[4][0] != null && !surroundings[4][0].isWall()) {
+          c = surroundings[4][0].col;
+        }
+      } else if (game.pacman.isMovingUp()) {
+        if (surroundings[0][4] != null && !surroundings[0][4].isWall()) {
+          r = surroundings[0][4].row;
+        }
+      } else if (game.pacman.isMovingDown()) {
+        if (surroundings[8][4] != null && !surroundings[8][4].isWall()) {
+          r = surroundings[8][4].row;
+        }
       }
-    } else if (game.pacman.isMovingLeft()) {
-      if (surroundings[4][0] != null && !surroundings[4][0].isWall()) {
-        c = surroundings[4][0].col;
-      }
-    } else if (game.pacman.isMovingUp()) {
-      if (surroundings[0][4] != null && !surroundings[0][4].isWall()) {
-        r = surroundings[0][4].row;
-      }
-    } else if (game.pacman.isMovingDown()) {
-      if (surroundings[8][4] != null && !surroundings[8][4].isWall()) {
-        r = surroundings[8][4].row;
-      }
+      
+      this.path = aStar(r, c, this.row, this.col); 
     }
-    
-    this.path = aStar(r, c, this.row, this.col);
   }
   
   @Override

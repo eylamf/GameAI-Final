@@ -32,7 +32,7 @@ abstract class Ghost {
      
     strokeWeight(3);
     for (Node n : this.path) {
-      n.renderPath(c, this.alpha); 
+      n.renderPath(c, this.alpha / 1.5); 
     }
   }
   
@@ -49,6 +49,52 @@ abstract class Ghost {
   
   protected void moveRandomly() {
    
+  }
+  
+  protected PVector getRandomDir() {
+    float random = random(0, 4);
+    float vx = 0;
+    float vy = 0;
+    
+    switch ((int) random) {
+      case 0:
+        vy = -1;
+        break;
+      case 1:
+        vx = 1;
+        break;
+      case 2:
+        vy = 1;
+        break;
+      case 3:
+        vx = -1;
+        break;
+    }
+    
+    Cell next = game.board.getCellAt(this.row + ((int) vy), this.col + ((int) vx));
+    
+    while (next.isWall()) {
+      random = random(0, 4);
+      
+      switch ((int) random) {
+        case 0:
+          vy = -1;
+          break;
+        case 1:
+          vx = 1;
+          break;
+        case 2:
+          vy = 1;
+          break;
+        case 3:
+          vx = -1;
+          break;
+      }
+      
+      next = game.board.getCellAt(this.row + ((int) vy), this.col + ((int) vx));
+    }
+    
+    return new PVector(vx, vy);
   }
   
   public boolean isMovingRight() {
