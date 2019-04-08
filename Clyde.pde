@@ -34,41 +34,7 @@ class Clyde extends Ghost {
         this.path = aStar(game.pacman.row, game.pacman.col, this.row, this.col);   
       } 
     }
-  }
-  
-  @Override
-  public void chase() {
-    for (int i = 0; i < this.path.size() - 1; i++) {
-      if (this.path.get(i).x == this.posn.x && this.path.get(i).y == this.posn.y) {
-        Node next = this.path.get(i + 1);
-        
-        float vx = 0;
-        float vy = 0;
-        
-        if (next.x < this.posn.x) {
-          vx = -1;
-          this.col--;
-        } else if (next.x > this.posn.x) {
-          vx = 1;
-          this.col++;
-        }
-        
-        if (next.y < this.posn.y) {
-          vy = -1;
-          this.row--;
-        } else if (next.y > this.posn.y) {
-          vy = 1;
-          this.row++;
-        }
-        
-        this.orientation = new PVector(vx, vy);
-        
-        break;
-      }
-    }
-    
-    this.posn.add(this.orientation);
-  }
+  }  
   
   @Override
   public void scatter() {

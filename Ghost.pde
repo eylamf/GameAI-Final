@@ -14,8 +14,6 @@ abstract class Ghost {
  
   public abstract void createPath();
   
-  public abstract void chase();
-  
   public abstract void scatter();
   
   public void render(color c) {
@@ -47,16 +45,58 @@ abstract class Ghost {
     }
   }
   
-  protected void moveRandomly() {
-   
+  protected void chase() {
+    for (int i = 0; i < this.path.size() - 1; i++) {
+      if (this.path.get(i).x == this.posn.x && this.path.get(i).y == this.posn.y) {
+        Node next = this.path.get(i + 1);
+        
+        float x = 0;
+        float y = 0;
+        
+        if (next.x < this.posn.x) {
+          x = -1;
+          this.col--;
+        } else if (next.x > this.posn.x) {
+          x = 1;
+          this.col++;
+        }
+        
+        if (next.y < this.posn.y) {
+          y = -1;
+          this.row--;
+        } else if (next.y > this.posn.y) {
+          y = 1;
+          this.row++;
+        }
+        
+        this.orientation = new PVector(x, y);
+        
+        break;
+      }
+    }
+    
+    this.posn.add(this.orientation);
   }
   
-  protected PVector getRandomDir() {
-    float random = random(0, 4);
+  protected void moveRandomly() {
+    if (this.isOnTurnBlock() || this.isOnEatenTurnBlock()) {
+      this.orientation = this.getRandomDir();
+    }
+    
+    this.posn.add(this.orientation);
+  
+    if (this.isOnCell()) {
+      this.row = convertYtoR((int) this.posn.y);
+      this.col = convertXtoC((int) this.posn.x);
+    }
+  }
+  
+  private PVector getRandomDir() {
+    float rand = random(0, 4);
     float vx = 0;
     float vy = 0;
     
-    switch ((int) random) {
+    switch (Math.round(rand)) {
       case 0:
         vy = -1;
         break;
@@ -71,12 +111,14 @@ abstract class Ghost {
         break;
     }
     
-    Cell next = game.board.getCellAt(this.row + ((int) vy), this.col + ((int) vx));
+    Cell cell = game.board.getCellAt(this.row + ((int) vx), this.col + ((int) vy));
     
-    while (next.isWall()) {
-      random = random(0, 4);
+    while (cell.isWall()) {
+      rand = random(0, 4);
+      vx = 0;
+      vy = 0;
       
-      switch ((int) random) {
+      switch (Math.round(rand)) {
         case 0:
           vy = -1;
           break;
@@ -91,10 +133,59 @@ abstract class Ghost {
           break;
       }
       
-      next = game.board.getCellAt(this.row + ((int) vy), this.col + ((int) vx));
+      cell = game.board.getCellAt(this.row + ((int) vx), this.col + ((int) vy));
     }
     
     return new PVector(vx, vy);
+  }
+  
+  private boolean isOnTurnBlock() {
+    if (!this.isOnCell()) {
+      return false; 
+    }
+    
+    return game.board.getCellAt(this.row, this.col).isTurnBlock();
+  }
+  
+  private boolean isOnEatenTurnBlock() {
+    if (!this.isOnCell()) {
+      return false; 
+    }
+    
+    return game.board.getCellAt(this.row, this.col).isEatenTurnBlock();
+  }
+  
+  /*
+  [X][C][X]
+  [C][G][C]
+  [X][C][X]
+  */
+  private Cell[][] getNearby() {
+    Cell[][] nearby = new Cell[3][3];
+    
+    for (int i = 0; i < 3; i++) {
+      for (int j = 0; j < 3; j++) {
+        nearby[i][j] = null; 
+      }
+    }
+    
+    if (this.row - 1 > 0) {
+      nearby[0][1] = game.board.getCellAt(this.row - 1, this.col);
+    }
+    
+    if (this.row + 1 < game.board.numRows) {
+      nearby[2][1] = game.board.getCellAt(this.row + 1, this.col);
+    }
+    
+    if (this.col - 1 > 0) {
+      nearby[1][0] = game.board.getCellAt(this.row, this.col - 1);
+    }
+    
+    if (this.col + 1 < game.board.numCols) {
+      nearby[1][2] = game.board.getCellAt(this.row, this.col + 1);
+    }
+    
+    return nearby;
   }
   
   public boolean isMovingRight() {
