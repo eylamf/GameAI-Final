@@ -225,6 +225,8 @@ public int idaSearch(ArrayList<Node> path, int g, int bound, int er, int ec) {
       if (!path.contains(neighbor)) {
         path.add(neighbor);
         
+        node.parent = neighbor;
+        
         int temp = idaSearch(path, g + 1, bound, er, ec);
         
         if (temp == FOUND) {
@@ -232,7 +234,7 @@ public int idaSearch(ArrayList<Node> path, int g, int bound, int er, int ec) {
         }
         
         if (temp < min) {
-          min = temp; 
+          min = temp;
         }
         
         path.remove(neighbor);
@@ -242,58 +244,3 @@ public int idaSearch(ArrayList<Node> path, int g, int bound, int er, int ec) {
   
   return min;
 }
-
-// 1st
-
-//public int idaStar(int sr, int sc, int er, int ec) {
-//  idaPath.clear();
-  
-//  Node start = game.board.getNodeAt(sr, sc);
-//  Node end = game.board.getNodeAt(er, ec);
-  
-//  int bound = Math.abs(start.row - end.row) + Math.abs(start.col - end.col);
-  
-//  while (true) {
-//     int temp = bfs(start, 0, bound, er, ec);
-     
-//     if (temp == 1) {
-//       return 1;  
-//     }
-     
-//     if (temp == 200) {
-//       return 0;
-//     }
-     
-//     bound = temp;
-//  }
-//}
-
-//public int bfs(Node node, int g, int bound, int er, int ec) {
-//  int min = Integer.MAX_VALUE;
-//  Node end = game.board.getNodeAt(er, ec);
-//  int f = g + Math.abs(node.row - end.row) + Math.abs(node.col - end.col);
-  
-//  if (f > bound) {
-//    return f;
-//  }
-  
-//  if (node.equals(end)) {
-//    return 1; 
-//  }
-  
-//  for (Node neighbor : node.getNeighbors()) {
-//    int temp = bfs(neighbor, g + 1, bound, er, ec);
-    
-//    if (temp == 1) {
-//      return 1; 
-//    }
-    
-//    if (temp < min && neighbor.getIsActive()) {
-//      min = temp;
-//      println(neighbor);
-//      idaPath.add(node);
-//    }
-//  }
-  
-//  return min;
-//}
