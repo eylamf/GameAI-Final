@@ -20,7 +20,11 @@ class Blinky extends Ghost {
   @Override
   public void createPath() {
     if (this.isOnCell()) {
-      this.path = aStar(game.pacman.row, game.pacman.col, this.row, this.col); 
+      if (USE_IDA) {
+        this.path = idaStar(this.row, this.col, game.pacman.row, game.pacman.col);
+      } else {
+        this.path = aStar(game.pacman.row, game.pacman.col, this.row, this.col);
+      }
     }
   }
   

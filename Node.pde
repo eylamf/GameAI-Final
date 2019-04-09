@@ -28,8 +28,14 @@ class Node implements Comparable<Node> {
       strokeWeight(3);
       line(this.x, this.y, this.parent.x, this.parent.y);
     } else {
-      fill(c);
-      ellipse(this.x, this.y, 5, 5); 
+      noStroke();
+      if (USE_IDA) {
+        fill(c);
+        ellipse(this.x, this.y, 5, 5);
+      } else {
+        fill(c, a);
+        ellipse(this.x, this.y, 10, 10);
+      }
     }
   }
   

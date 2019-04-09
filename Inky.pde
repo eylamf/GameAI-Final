@@ -34,7 +34,11 @@ class Inky extends Ghost {
         c = closest.col;
       }
   
-      this.path = aStar(r, c, this.row, this.col); 
+      if (USE_IDA) {
+        this.path = idaStar(this.row, this.col, r, c);
+      } else {
+        this.path = aStar(r, c, this.row, this.col); 
+      }
     }
   }
   
