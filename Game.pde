@@ -27,9 +27,18 @@ class Game {
     
     this.pacman.move();
     this.blinky.move();
-    this.pinky.move();
-    this.clyde.move();
-    this.inky.move();
+    
+    if (SCORE > 10) {
+      this.pinky.move(); 
+    }
+    
+    if (SCORE > 20) {
+      this.clyde.move(); 
+    }
+    
+    if (SCORE > 30) {
+      this.inky.move(); 
+    }
   }
   
   public void setMode(int m) {

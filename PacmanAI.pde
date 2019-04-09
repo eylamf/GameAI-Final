@@ -28,6 +28,7 @@ public static final int FOUND = 1000;
 
 boolean DEBUG = false;
 boolean USE_IDA = false;
+int SCORE = 0;
 public ArrayList<Cell> POWER_PELLET_POSNS;
 
 Game game;

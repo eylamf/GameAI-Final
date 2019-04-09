@@ -42,8 +42,10 @@ class Pacman {
       
       if (current.isTurnBlock()) {
         current.setType(EATEN_TURN_BLOCK);
+        SCORE++;
       } else if (current.isPellet() || current.isPowerPellet()) {
-        current.setType(EMPTY); 
+        current.setType(EMPTY);
+        SCORE++;
       }
     }
     
@@ -131,7 +133,7 @@ class Pacman {
       for (int i = 0; i < 9; i++) {
         for (int j = 0; j < 9; j++) {
           if (surroundings[i][j] != null) {
-            fill(255, 0, 0);
+            fill(WHITE);
             noStroke();
             ellipse(surroundings[i][j].x, surroundings[i][j].y, INCREMENT / 2, INCREMENT / 2); 
           }

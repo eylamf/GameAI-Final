@@ -16,6 +16,7 @@ class Cell {
   
   public void render() {
     if (DEBUG) {
+      strokeWeight(1);
       stroke(WHITE);
     } else {
       noStroke(); 
@@ -27,7 +28,7 @@ class Cell {
       
       if (this.isTurnBlock() || this.isEatenTurnBlock()) {
         if (DEBUG) {
-          fill(WHITE); 
+          fill(RED); 
         } else {
           fill(BLACK); 
         }
