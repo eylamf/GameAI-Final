@@ -8,6 +8,10 @@ class Pacman {
   private String requestedDir;
   
   public Pacman() {
+    this.reset();  
+  }
+  
+  public void reset() {
     this.row = 23;
     this.col = 13;
     this.initX = convertCtoX(this.col);
@@ -15,7 +19,7 @@ class Pacman {
     this.posn = new PVector(this.initX, this.initY);
     this.orientation = new PVector(-1, 0);
     this.turnRequested = false;
-    this.requestedDir = "left";    
+    this.requestedDir = "left";
   }
   
   public void render() {

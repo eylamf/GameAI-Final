@@ -28,13 +28,16 @@ public static final int FOUND = 1000;
 
 boolean DEBUG = false;
 boolean USE_IDA = false;
+
 int SCORE = 0;
+int LIVES = 3;
 public ArrayList<Cell> POWER_PELLET_POSNS;
 
 Game game;
 
 void setup() {
-  size(561, 621);
+  //size(561, 621);
+  size(561, 701);
   frameRate(90);
   
   POWER_PELLET_POSNS = new ArrayList();
@@ -55,14 +58,18 @@ void draw() {
   
   game.render();
   
-  // IDA TEST
+  textAlign(LEFT);
+  textSize(12);
+  fill(255);
   
-  //ArrayList<Node> ida = idaStar(game.pacman.row, game.pacman.col, 1, 1);
-  //println(ida);
+  text("Score " + SCORE, (-WIDTH / 2) + INCREMENT, (700 / 2) - INCREMENT);
   
-  //for (Node n : ida) {
-  //  n.renderPath(color(255, 0, 0), 200 / 1.5);
-  //}
+  textAlign(RIGHT);
+  if (USE_IDA) {
+    text("Using IDA*", (WIDTH / 2) - INCREMENT, (700 / 2) - INCREMENT);
+  } else {
+    text("Using A*", (WIDTH / 2) - INCREMENT, (700 / 2) - INCREMENT); 
+  }
 }
 
 void keyPressed() {

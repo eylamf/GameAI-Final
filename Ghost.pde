@@ -76,6 +76,11 @@ abstract class Ghost {
     }
     
     this.posn.add(this.orientation);
+    
+    if (this.didHitPacman()) {
+      game.pacman.reset();
+      LIVES--;
+    }
   }
   
   protected void moveRandomly() {
@@ -207,5 +212,9 @@ abstract class Ghost {
   public boolean isOnCell() {
     return (Math.abs(this.posn.x - game.board.initX) % INCREMENT == 0
     && Math.abs(this.posn.y - game.board.initY) % INCREMENT == 0);
+  }
+  
+  public boolean didHitPacman() {
+    return this.row == game.pacman.row && this.col == game.pacman.col; 
   }
 }

@@ -25,19 +25,26 @@ class Game {
     this.inky.render();
     this.pacman.render();
     
-    this.pacman.move();
-    this.blinky.move();
-    
-    if (SCORE > 10) {
-      this.pinky.move(); 
-    }
-    
-    if (SCORE > 20) {
-      this.clyde.move(); 
-    }
-    
-    if (SCORE > 30) {
-      this.inky.move(); 
+    if (LIVES > 0) {
+      this.pacman.move();
+      this.blinky.move();
+      
+      if (SCORE > 10) {
+        this.pinky.move();
+      }
+      
+      if (SCORE > 20) {
+        this.clyde.move(); 
+      }
+      
+      if (SCORE > 30) {
+        this.inky.move(); 
+      } 
+    } else {
+      fill(RED);
+      textAlign(CENTER);
+      textSize(24);
+      text("GAME OVER", 0, 0);
     }
   }
   

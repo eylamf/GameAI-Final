@@ -25,10 +25,17 @@ class Node implements Comparable<Node> {
   public void renderPath(color c, float a) {
     if (this.parent != null) {
       stroke(c, a);
-      strokeWeight(3);
+      
+      if (USE_IDA) {
+        strokeWeight(5);
+      } else {
+        strokeWeight(3);
+      }
+      
       line(this.x, this.y, this.parent.x, this.parent.y);
     } else {
       fill(c, a);
+      noStroke();
       
       if (USE_IDA) {
         rect(this.x, this.y, 10, 10);
