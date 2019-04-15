@@ -6,7 +6,7 @@ class Clyde extends Ghost {
     int x = convertCtoX(this.col);
     int y = convertRtoY(this.row);
     this.posn = new PVector(x, y);
-    this.orientation = new PVector(-1, 0);
+    this.orientation = new PVector(-(this.speed), 0);
   }
   
   public void render() {

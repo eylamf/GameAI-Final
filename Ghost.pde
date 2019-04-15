@@ -8,6 +8,7 @@ abstract class Ghost {
   protected int mode;
   private boolean isActive;
   private boolean isReturning;
+  protected float speed;
   
   public Ghost() {
     this.appearanceTimer = 0;
@@ -16,11 +17,20 @@ abstract class Ghost {
     this.mode = CHASING;
     this.isActive = false;
     this.isReturning = false;
+    this.speed = 1;
   }
  
   public abstract void createPath();
   
   public abstract void scatter();
+  
+  public void setSpeed(float s) {
+    this.speed = s; 
+  }
+  
+  public float getSpeed() {
+    return this.speed;
+  }
   
   public void render(color c) {
     if (this.mode == FRIGHTENED) {
@@ -97,18 +107,18 @@ abstract class Ghost {
         float y = 0;
         
         if (next.x < this.posn.x) {
-          x = -1;
+          x = -(this.speed);
           this.col--;
         } else if (next.x > this.posn.x) {
-          x = 1;
+          x = this.speed;
           this.col++;
         }
         
         if (next.y < this.posn.y) {
-          y = -1;
+          y = -(this.speed);
           this.row--;
         } else if (next.y > this.posn.y) {
-          y = 1;
+          y = this.speed;
           this.row++;
         }
         
@@ -120,17 +130,17 @@ abstract class Ghost {
     
     this.posn.add(this.orientation);
     
-    if (this.didHitPacman()) {
-      println("hit");
-      if (this.mode == FRIGHTENED && !this.isReturning) {
-        game.pacman.reset();
-        LIVES--;
-      }
-    }
-    
     if (this.isBackAtStart() && this.isReturning) {
       this.isReturning = false;
       this.mode = CHASING; 
+      this.speed = 1;
+    }
+    
+    if (this.didHitPacman()) {
+      if ((this.mode == FRIGHTENED && !this.isReturning) || this.mode == CHASING) {
+        game.pacman.reset();
+        LIVES--;
+      }
     }
   }
   
@@ -150,6 +160,7 @@ abstract class Ghost {
     if (this.didHitPacman()) {
       if (!this.isReturning) {
         this.isReturning = true;
+        this.speed = 2;
         this.clampPosn();
       }
     }
@@ -171,16 +182,16 @@ abstract class Ghost {
     
     switch (Math.round(rand)) {
       case 0:
-        vy = -1;
+        vy = -(this.speed);
         break;
       case 1:
-        vx = 1;
+        vx = this.speed;
         break;
       case 2:
-        vy = 1;
+        vy = this.speed;
         break;
       case 3:
-        vx = -1;
+        vx = -(this.speed);
         break;
     }
     
@@ -193,16 +204,16 @@ abstract class Ghost {
       
       switch (Math.round(rand)) {
         case 0:
-          vy = -1;
+          vy = -(this.speed);
           break;
         case 1:
-          vx = 1;
+          vx = this.speed;
           break;
         case 2:
-          vy = 1;
+          vy = this.speed;
           break;
         case 3:
-          vx = -1;
+          vx = -(this.speed);
           break;
       }
       
@@ -274,19 +285,19 @@ abstract class Ghost {
   }
   
   public boolean isMovingRight() {
-    return this.orientation.x == 1; 
+    return this.orientation.x == this.speed; 
   }
   
   public boolean isMovingLeft() {
-    return this.orientation.x == -1; 
+    return this.orientation.x == -(this.speed); 
   }
   
   public boolean isMovingUp() {
-    return this.orientation.y == -1; 
+    return this.orientation.y == -(this.speed); 
   }
   
   public boolean isMovingDown() {
-    return this.orientation.y == 1; 
+    return this.orientation.y == this.speed; 
   }
   
   public boolean isOnCell() {
@@ -310,5 +321,15 @@ abstract class Ghost {
   
   public void setMode(int m) {
     this.mode = m;
+    
+    if (m == CHASING || m == SCATTER) {
+      this.speed = 1; 
+    } else if (m == FRIGHTENED) {
+      if (this.isReturning) {
+        this.speed = 2;
+      } else {
+        this.speed = 1; 
+      }
+    }
   }
 }
