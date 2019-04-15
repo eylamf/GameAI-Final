@@ -12,7 +12,7 @@ class Clyde extends Ghost {
   public void render() {
     super.render(ORANGE);
     
-    if (this.path.isEmpty() && SCORE > 20 && game.mode == CHASING) {
+    if (this.path.isEmpty() && SCORE > 20 && this.mode == CHASING) {
       this.createPath(); 
     }
   }

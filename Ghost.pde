@@ -5,13 +5,17 @@ abstract class Ghost {
   protected PVector orientation;
   protected int appearanceTimer;
   protected float alpha;
+  protected int mode;
   private boolean isActive;
+  private boolean isReturning;
   
   public Ghost() {
     this.appearanceTimer = 0;
     this.alpha = 200;
     this.path = new ArrayList();
+    this.mode = CHASING;
     this.isActive = false;
+    this.isReturning = false;
   }
  
   public abstract void createPath();
@@ -19,18 +23,28 @@ abstract class Ghost {
   public abstract void scatter();
   
   public void render(color c) {
-    if (game.mode == FRIGHTENED) {
-      // Change ghost appearance
-      if (floor(game.getTimer() / 30) % 2 == 0) {
-        fill(WHITE, this.alpha);
-        stroke(WHITE);
+    if (this.mode == FRIGHTENED) {
+      if (this.isReturning) {
+        fill(c, 70);
+        stroke(c, this.alpha);
       } else {
-        fill(BLUE, this.alpha);
-        stroke(BLUE); 
+        // Change ghost appearance
+        if (floor(game.timer / 30) % 2 == 0) { 
+          fill(WHITE, this.alpha);
+          stroke(WHITE);
+        } else {
+          fill(BLUE, this.alpha);
+          stroke(BLUE); 
+        } 
       }
     } else {
-      fill(c, this.alpha);
-      stroke(c);
+      if (this.isReturning) {
+        fill(c, 70);
+        stroke(c, this.alpha);
+      } else {
+        fill(c, this.alpha);
+        stroke(c); 
+      }
     }
     
     strokeWeight(2);
@@ -38,7 +52,11 @@ abstract class Ghost {
      
     strokeWeight(3);
     for (Node n : this.path) {
-      n.renderPath(c, this.alpha / 1.5);
+      if (this.isReturning) {
+        n.renderPath(c, 70);
+      } else {
+        n.renderPath(c, this.alpha / 1.5); 
+      }
     }
   }
   
@@ -47,13 +65,24 @@ abstract class Ghost {
       this.setIsActive(true); 
     }
     
-    if (game.mode == CHASING) {
-      this.createPath();
+    if (this.mode == CHASING) {
+      if (!this.isReturning) {
+        this.createPath(); 
+      }
       this.chase();
-    } else if (game.mode == FRIGHTENED) {
-      this.path.clear();
-      this.moveRandomly();
-    } else if (game.mode == SCATTER) {
+    } else if (this.mode == FRIGHTENED) {
+      if (!this.path.isEmpty() && !this.isReturning) {
+        this.path.clear(); 
+      }
+      
+      if (this.isReturning) {
+        this.createPathToStart();
+        this.chase();
+      } else {
+        this.moveRandomly(); 
+      }
+      
+    } else if (this.mode == SCATTER) {
       this.scatter();
     }
   }
@@ -92,8 +121,16 @@ abstract class Ghost {
     this.posn.add(this.orientation);
     
     if (this.didHitPacman()) {
-      game.pacman.reset();
-      LIVES--;
+      println("hit");
+      if (this.mode == FRIGHTENED && !this.isReturning) {
+        game.pacman.reset();
+        LIVES--;
+      }
+    }
+    
+    if (this.isBackAtStart() && this.isReturning) {
+      this.isReturning = false;
+      this.mode = CHASING; 
     }
   }
   
@@ -108,6 +145,21 @@ abstract class Ghost {
     if (this.isOnCell()) {
       this.row = convertYtoR((int) this.posn.y);
       this.col = convertXtoC((int) this.posn.x);
+    }
+    
+    if (this.didHitPacman()) {
+      if (!this.isReturning) {
+        this.isReturning = true;
+        this.clampPosn();
+      }
+    }
+  }
+  
+  protected void createPathToStart() {
+    if (USE_IDA) {
+      this.path = idaStar(this.row, this.col, 13, 13); 
+    } else {
+      this.path = aStar(13, 13, this.row, this.col);
     }
   }
   
@@ -166,6 +218,10 @@ abstract class Ghost {
   
   protected boolean getIsActive() {
     return this.isActive; 
+  }
+  
+  private boolean isBackAtStart() {
+    return this.row == 13 && this.col == 13 && this.isReturning; 
   }
   
   private boolean isOnTurnBlock() {
@@ -250,5 +306,9 @@ abstract class Ghost {
       
       this.posn = new PVector(x, y);
     }
+  }
+  
+  public void setMode(int m) {
+    this.mode = m;
   }
 }

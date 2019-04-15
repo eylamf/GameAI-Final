@@ -1,15 +1,14 @@
 class Game {
-  public int mode;
   public Board board;
   public Pacman pacman;
   public Blinky blinky;
   public Pinky pinky;
   public Clyde clyde;
   public Inky inky;
-  private int timer;
+  public int timer;
+  private int mode;
   
   public Game() {
-    this.mode = CHASING;
     this.board = new Board();
     this.pacman = new Pacman();
     this.blinky = new Blinky();
@@ -17,6 +16,7 @@ class Game {
     this.clyde = new Clyde();
     this.inky = new Inky();
     this.timer = 0;
+    this.mode = CHASING;
   }
   
   public void render() {
@@ -35,7 +35,7 @@ class Game {
         if (this.pinky.getIsActive()) {
           this.pinky.move();  
         } else {
-          if (game.mode == CHASING) {
+          if (this.pinky.mode == CHASING) {
             this.pinky.move(); 
           }
         }
@@ -46,7 +46,7 @@ class Game {
           println("active");
           this.clyde.move();  
         } else {
-          if (game.mode == CHASING) {
+          if (this.clyde.mode == CHASING) {
             this.clyde.move(); 
           }
         }
@@ -56,26 +56,28 @@ class Game {
         if (this.inky.getIsActive()) {
           this.inky.move();  
         } else {
-          if (game.mode == CHASING) {
+          if (this.inky.mode == CHASING) {
             this.inky.move(); 
           }
         } 
       }
       
-      // Ghost flash timer
       if (this.mode == FRIGHTENED) {
         this.timer++;
+      
         // Frightened mode lasts for 7s
         if (this.timer > 700) {
-          this.setMode(CHASING);
-          this.timer = 0;
+          this.mode = CHASING;
+          this.setGhostsMode(CHASING);
+          this.timer = 0; 
           
           this.blinky.clampPosn();
           this.pinky.clampPosn();
           this.clyde.clampPosn();
           this.inky.clampPosn();
-        }        
+        } 
       }
+      
     } else {
       fill(RED);
       textAlign(CENTER);
@@ -84,11 +86,18 @@ class Game {
     }
   }
   
-  public void setMode(int m) {
-    this.mode = m; 
+  public int getMode() {
+    return this.mode;
   }
   
-  public int getTimer() {
-    return this.timer;
+  public void setMode(int mode) {
+    this.mode = mode; 
+  }
+  
+  public void setGhostsMode(int mode) {
+    this.blinky.setMode(mode);
+    this.pinky.setMode(mode);
+    this.clyde.setMode(mode);
+    this.inky.setMode(mode);
   }
 }

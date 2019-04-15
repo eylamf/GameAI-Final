@@ -13,7 +13,7 @@ class Inky extends Ghost {
   public void render() {
     super.render(LIGHT_BLUE);
     
-    if (this.path.isEmpty() && SCORE > 30 && game.mode == CHASING) {
+    if (this.path.isEmpty() && SCORE > 30 && this.mode == CHASING) {
       this.createPath(); 
     }
   }

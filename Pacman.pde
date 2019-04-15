@@ -40,6 +40,7 @@ class Pacman {
       
       if (this.didEatPowerPellet()) {
         game.setMode(FRIGHTENED);
+        game.setGhostsMode(FRIGHTENED);
       }
       
       Cell current = game.board.getCellAt(this.row, this.col);
@@ -296,6 +297,10 @@ class Pacman {
   }
   
   private boolean isOnTurnBlock() {
+    if (!this.isOnCell()) {
+      return false; 
+    }
+    
     Cell curr = game.board.getCellAt(this.row, this.col);
     
     return curr.isTurnBlock() || curr.isEatenTurnBlock();

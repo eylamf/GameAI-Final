@@ -31,6 +31,7 @@ boolean USE_IDA = false;
 
 int SCORE = 0;
 int LIVES = 3;
+int GHOST_APPEARANCE_TIMER = 0;
 public ArrayList<Cell> POWER_PELLET_POSNS;
 
 Game game;
