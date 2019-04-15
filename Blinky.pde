@@ -7,6 +7,7 @@ class Blinky extends Ghost {
     int y = convertRtoY(this.row);
     this.posn = new PVector(x, y);
     this.orientation = new PVector(0, -1);
+    this.setIsActive(true);
   }
   
   public void render() {

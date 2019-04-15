@@ -82,6 +82,7 @@ void keyPressed() {
   }
 }
 
+// Convert x coord to column on grid
 public int convertXtoC(int x) {
   int initX = (-WIDTH / 2) + (INCREMENT / 2);
   int c = 0;
@@ -94,6 +95,7 @@ public int convertXtoC(int x) {
   return c;
 }
 
+// Convert y coord to row on grid
 public int convertYtoR(int y) {
   int initY = (-HEIGHT / 2) + (INCREMENT / 2);
   int r = 0;
@@ -106,6 +108,7 @@ public int convertYtoR(int y) {
   return r;
 }
 
+// Convert column on grid to an x coord
 public int convertCtoX(int c) {
   int x = (-WIDTH / 2) + (INCREMENT / 2);
   
@@ -117,6 +120,7 @@ public int convertCtoX(int c) {
   return x;
 }
 
+// Convert row on grid to y coord
 public int convertRtoY(int r) {
   int y = (-HEIGHT / 2) + (INCREMENT / 2);
   
@@ -128,6 +132,7 @@ public int convertRtoY(int r) {
   return y;
 }
 
+// A* algorithm
 public ArrayList<Node> aStar(int sr, int sc, int er, int ec) {
   Node start = game.board.getNodeAt(sr, sc);
   Node end = game.board.getNodeAt(er, ec);
@@ -187,6 +192,7 @@ public ArrayList<Node> aStar(int sr, int sc, int er, int ec) {
   return new ArrayList();
 }
 
+// IDA* algorithm
 public ArrayList<Node> idaStar(int sr, int sc, int er, int ec) {
   Node start = game.board.getNodeAt(sr, sc);
   Node end = game.board.getNodeAt(er, ec);

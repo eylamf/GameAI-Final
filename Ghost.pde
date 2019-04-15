@@ -5,11 +5,13 @@ abstract class Ghost {
   protected PVector orientation;
   protected int appearanceTimer;
   protected float alpha;
+  private boolean isActive;
   
   public Ghost() {
     this.appearanceTimer = 0;
     this.alpha = 200;
     this.path = new ArrayList();
+    this.isActive = false;
   }
  
   public abstract void createPath();
@@ -18,8 +20,14 @@ abstract class Ghost {
   
   public void render(color c) {
     if (game.mode == FRIGHTENED) {
-      fill(BLUE, this.alpha);
-      stroke(BLUE);
+      // Change ghost appearance
+      if (floor(game.getTimer() / 30) % 2 == 0) {
+        fill(WHITE, this.alpha);
+        stroke(WHITE);
+      } else {
+        fill(BLUE, this.alpha);
+        stroke(BLUE); 
+      }
     } else {
       fill(c, this.alpha);
       stroke(c);
@@ -30,21 +38,27 @@ abstract class Ghost {
      
     strokeWeight(3);
     for (Node n : this.path) {
-      n.renderPath(c, this.alpha / 1.5); 
+      n.renderPath(c, this.alpha / 1.5);
     }
   }
   
   protected void move() {
+    if (!this.getIsActive()) {
+      this.setIsActive(true); 
+    }
+    
     if (game.mode == CHASING) {
       this.createPath();
       this.chase();
     } else if (game.mode == FRIGHTENED) {
+      this.path.clear();
       this.moveRandomly();
     } else if (game.mode == SCATTER) {
       this.scatter();
     }
   }
   
+  // Movement for "chase" mode
   protected void chase() {
     for (int i = 0; i < this.path.size() - 1; i++) {
       if (this.path.get(i).x == this.posn.x && this.path.get(i).y == this.posn.y) {
@@ -83,7 +97,8 @@ abstract class Ghost {
     }
   }
   
-  protected void moveRandomly() {
+  // Frightened mode behavior
+  protected void moveRandomly() {    
     if (this.isOnTurnBlock() || this.isOnEatenTurnBlock()) {
       this.orientation = this.getRandomDir();
     }
@@ -96,6 +111,7 @@ abstract class Ghost {
     }
   }
   
+  // Generate a random orientation
   private PVector getRandomDir() {
     float rand = random(0, 4);
     float vx = 0;
@@ -116,9 +132,9 @@ abstract class Ghost {
         break;
     }
     
-    Cell cell = game.board.getCellAt(this.row + ((int) vx), this.col + ((int) vy));
+    Cell cell = game.board.getCellAt(this.row + ((int) vy), this.col + ((int) vx));
     
-    while (cell.isWall()) {
+    while (cell.isWall() || (vx == 0 && vy == 0)) {
       rand = random(0, 4);
       vx = 0;
       vy = 0;
@@ -138,10 +154,18 @@ abstract class Ghost {
           break;
       }
       
-      cell = game.board.getCellAt(this.row + ((int) vx), this.col + ((int) vy));
+      cell = game.board.getCellAt(this.row + ((int) vy), this.col + ((int) vx));
     }
     
     return new PVector(vx, vy);
+  }
+  
+  protected void setIsActive(boolean a) {
+    this.isActive = a; 
+  }
+  
+  protected boolean getIsActive() {
+    return this.isActive; 
   }
   
   private boolean isOnTurnBlock() {
@@ -216,5 +240,15 @@ abstract class Ghost {
   
   public boolean didHitPacman() {
     return this.row == game.pacman.row && this.col == game.pacman.col; 
+  }
+  
+  // Used when ghosts exit "frightened" mode in order to reset posn to use A* or IDA*
+  public void clampPosn() {
+    if (!this.isOnCell()) {
+      int x = convertCtoX(this.col);
+      int y = convertRtoY(this.row);
+      
+      this.posn = new PVector(x, y);
+    }
   }
 }
