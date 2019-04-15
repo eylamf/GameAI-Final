@@ -41,6 +41,7 @@ class Pacman {
       if (this.didEatPowerPellet()) {
         game.setMode(FRIGHTENED);
         game.setGhostsMode(FRIGHTENED);
+        game.board.getCellAt(this.row, this.col).setType(EMPTY);
       }
       
       Cell current = game.board.getCellAt(this.row, this.col);
@@ -280,10 +281,10 @@ class Pacman {
   }
   
   private boolean didEatPowerPellet() {
-    Cell current = new Cell(this.row, this.col);
+    Cell current = game.board.getCellAt(this.row, this.col);
     
     for (Cell cell : POWER_PELLET_POSNS) {
-      if (current.equals(cell)) {
+      if (current.equals(cell) && current.isPowerPellet()) {
         return true;
       }
     }

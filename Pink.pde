@@ -7,6 +7,8 @@ class Pinky extends Ghost {
     int y = convertRtoY(this.row);
     this.posn = new PVector(x, y);
     this.orientation = new PVector(0, -(this.speed));
+    this.desiredScatterR = 1;
+    this.desiredScatterC = 26;
   }
   
   public void render() {
@@ -51,8 +53,38 @@ class Pinky extends Ghost {
     }
   }
   
+  /*
+  * Top right
+  * (1, 15) - (1, 26)
+  * (8, 15) - (8, 26)
+  */
   @Override
-  public void scatter() {
-    
+  protected void createPathToDesiredCorner() {
+    if (this.isAtDesiredScatterPosn()) {
+      int r, c;
+      int randR = Math.round(random(1, 9));
+      int randC = Math.round(random(15, 27));
+      
+      Cell cell = game.board.getCellAt(randR, randC);
+      
+      while (cell.isWall()) {
+        randR = Math.round(random(1, 9));
+        randC = Math.round(random(15, 27));
+        
+        cell = game.board.getCellAt(randR, randC);
+      }
+      
+      r = randR;
+      c = randC;
+      
+      this.desiredScatterR = r;
+      this.desiredScatterC = c;
+      
+      if (USE_IDA) {
+        this.path = idaStar(this.row, this.col, this.desiredScatterR, this.desiredScatterC);
+      } else {
+        this.path = aStar(this.desiredScatterR, this.desiredScatterC, this.row, this.col);
+      } 
+    }
   }
 }

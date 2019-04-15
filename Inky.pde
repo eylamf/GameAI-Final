@@ -8,6 +8,8 @@ class Inky extends Ghost {
     int y = convertRtoY(this.row);
     this.posn = new PVector(x, y);
     this.orientation = new PVector(0, -(this.speed));
+    this.desiredScatterR = 29;
+    this.desiredScatterC = 26;
   }
   
   public void render() {
@@ -42,9 +44,39 @@ class Inky extends Ghost {
     }
   }
   
+  /*
+  * Bottom right
+  * (20, 15) - (20, 26)
+  * (29, 1) - (29, 12)
+  */
   @Override
-  public void scatter() {
-    
+  protected void createPathToDesiredCorner() {
+    if (this.isAtDesiredScatterPosn()) {
+      int r, c;
+      int randR = Math.round(random(20, 30));
+      int randC = Math.round(random(15, 27));
+      
+      Cell cell = game.board.getCellAt(randR, randC);
+      
+      while (cell.isWall()) {
+        randR = Math.round(random(20, 30));
+        randC = Math.round(random(15, 27));
+        
+        cell = game.board.getCellAt(randR, randC);
+      }
+      
+      r = randR;
+      c = randC;
+      
+      this.desiredScatterR = r;
+      this.desiredScatterC = c;
+      
+      if (USE_IDA) {
+        this.path = idaStar(this.row, this.col, this.desiredScatterR, this.desiredScatterC);
+      } else {
+        this.path = aStar(this.desiredScatterR, this.desiredScatterC, this.row, this.col);
+      } 
+    }
   }
   
   private Cell getClosestToDest(float x, float y) {

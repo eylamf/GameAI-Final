@@ -7,6 +7,8 @@ class Clyde extends Ghost {
     int y = convertRtoY(this.row);
     this.posn = new PVector(x, y);
     this.orientation = new PVector(-(this.speed), 0);
+    this.desiredScatterR = 29;
+    this.desiredScatterC = 1;
   }
   
   public void render() {
@@ -44,8 +46,38 @@ class Clyde extends Ghost {
     }
   }  
   
+  /*
+  * Bottom left
+  * (20, 1) - (20, 12)
+  * (29, 1) - (29, 12)
+  */
   @Override
-  public void scatter() {
-    
+  protected void createPathToDesiredCorner() {
+    if (this.isAtDesiredScatterPosn()) {
+      int r, c;
+      int randR = Math.round(random(20, 30));
+      int randC = Math.round(random(1, 9));
+      
+      Cell cell = game.board.getCellAt(randR, randC);
+      
+      while (cell.isWall()) {
+        randR = Math.round(random(20, 30));
+        randC = Math.round(random(1, 9));
+        
+        cell = game.board.getCellAt(randR, randC);
+      }
+      
+      r = randR;
+      c = randC;
+      
+      this.desiredScatterR = r;
+      this.desiredScatterC = c;
+      
+      if (USE_IDA) {
+        this.path = idaStar(this.row, this.col, this.desiredScatterR, this.desiredScatterC);
+      } else {
+        this.path = aStar(this.desiredScatterR, this.desiredScatterC, this.row, this.col);
+      } 
+    }
   }
 }

@@ -8,6 +8,8 @@ class Blinky extends Ghost {
     this.posn = new PVector(x, y);
     this.orientation = new PVector(0, -(this.speed));
     this.setIsActive(true);
+    this.desiredScatterR = 1;
+    this.desiredScatterC = 1;
   }
   
   public void render() {
@@ -29,8 +31,38 @@ class Blinky extends Ghost {
     }
   }
   
+  /*
+  * Top left
+  * (1, 1) - (1, 8)
+  * (8, 1) - (8, 12)
+  */
   @Override
-  public void scatter() {
-    
+  protected void createPathToDesiredCorner() {
+    if (this.isAtDesiredScatterPosn()) {
+      int r, c;
+      int randR = Math.round(random(1, 9));
+      int randC = Math.round(random(1, 13));
+      
+      Cell cell = game.board.getCellAt(randR, randC);
+      
+      while (cell.isWall()) {
+        randR = Math.round(random(1, 9));
+        randC = Math.round(random(1, 13));
+        
+        cell = game.board.getCellAt(randR, randC);
+      }
+      
+      r = randR;
+      c = randC;
+      
+      this.desiredScatterR = r;
+      this.desiredScatterC = c;
+      
+      if (USE_IDA) {
+        this.path = idaStar(this.row, this.col, this.desiredScatterR, this.desiredScatterC);
+      } else {
+        this.path = aStar(this.desiredScatterR, this.desiredScatterC, this.row, this.col);
+      } 
+    }
   }
 }

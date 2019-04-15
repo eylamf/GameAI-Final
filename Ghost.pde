@@ -9,6 +9,7 @@ abstract class Ghost {
   private boolean isActive;
   private boolean isReturning;
   protected float speed;
+  protected int desiredScatterR, desiredScatterC;
   
   public Ghost() {
     this.appearanceTimer = 0;
@@ -22,7 +23,12 @@ abstract class Ghost {
  
   public abstract void createPath();
   
-  public abstract void scatter();
+  protected void scatter() {
+    this.createPathToDesiredCorner();
+    this.chase();
+  }
+  
+  protected abstract void createPathToDesiredCorner();
   
   public void setSpeed(float s) {
     this.speed = s; 
@@ -67,6 +73,14 @@ abstract class Ghost {
       } else {
         n.renderPath(c, this.alpha / 1.5); 
       }
+    }
+  }
+  
+  public void setInitialScatterDest() {
+    if (USE_IDA) {
+      this.path = idaStar(this.row, this.col, this.desiredScatterR, this.desiredScatterC);
+    } else {
+      this.path = aStar(this.desiredScatterR, this.desiredScatterC, this.row, this.col); 
     }
   }
   
@@ -137,7 +151,7 @@ abstract class Ghost {
     }
     
     if (this.didHitPacman()) {
-      if ((this.mode == FRIGHTENED && !this.isReturning) || this.mode == CHASING) {
+      if ((this.mode == FRIGHTENED && !this.isReturning) || this.mode == CHASING || this.mode == SCATTER) {
         game.pacman.reset();
         LIVES--;
       }
@@ -229,6 +243,10 @@ abstract class Ghost {
   
   protected boolean getIsActive() {
     return this.isActive; 
+  }
+  
+  protected boolean isAtDesiredScatterPosn() {
+    return this.row == this.desiredScatterR && this.col == this.desiredScatterC; 
   }
   
   private boolean isBackAtStart() {

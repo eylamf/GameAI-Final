@@ -43,7 +43,6 @@ class Game {
       
       if (SCORE > 20) {
         if (this.clyde.getIsActive()) {
-          println("active");
           this.clyde.move();  
         } else {
           if (this.clyde.mode == CHASING) {
@@ -62,6 +61,7 @@ class Game {
         } 
       }
       
+      // Frightened timer
       if (this.mode == FRIGHTENED) {
         this.timer++;
       
@@ -71,11 +71,29 @@ class Game {
           this.setGhostsMode(CHASING);
           this.timer = 0; 
           
-          this.blinky.clampPosn();
-          this.pinky.clampPosn();
-          this.clyde.clampPosn();
-          this.inky.clampPosn();
+          this.clampGhostPosns();
         } 
+      }
+      // Scatter timer
+      else if (this.mode == CHASING) {
+        this.timer++;
+        
+        // Switch to scatter after 8s of chasing
+        if (this.timer > 300) {
+          this.setMode(SCATTER);
+          this.setGhostsMode(SCATTER);
+          this.clampGhostPosns();
+        }
+      }
+      // Switch to chasing after 5s of scatter
+      else if (this.mode == SCATTER) {
+        this.timer++; 
+        
+        if (this.timer > 2000) {
+          this.setMode(CHASING);
+          this.setGhostsMode(CHASING);
+          this.clampGhostPosns();
+        }
       }
       
     } else {
@@ -90,14 +108,33 @@ class Game {
     return this.mode;
   }
   
-  public void setMode(int mode) {
-    this.mode = mode; 
+  public void setMode(int m) {
+    this.mode = m;
+    this.timer = 0;
   }
   
   public void setGhostsMode(int mode) {
+    if (mode == SCATTER) {
+      this.setGhostsScatterDest();
+    }
+    
     this.blinky.setMode(mode);
     this.pinky.setMode(mode);
     this.clyde.setMode(mode);
     this.inky.setMode(mode);
+  }
+  
+  public void clampGhostPosns() {
+    this.blinky.clampPosn(); 
+    this.pinky.clampPosn();
+    this.clyde.clampPosn();
+    this.inky.clampPosn();
+  }
+  
+  private void setGhostsScatterDest() {
+    this.blinky.setInitialScatterDest();
+    this.pinky.setInitialScatterDest();
+    this.clyde.setInitialScatterDest();
+    this.inky.setInitialScatterDest();
   }
 }

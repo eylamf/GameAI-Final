@@ -78,6 +78,7 @@ void keyPressed() {
     DEBUG = !DEBUG; 
   } else if (key == 'a') {
     USE_IDA = !USE_IDA;
+    game.clampGhostPosns();
   } else {
     game.pacman.onKey(); 
   }
