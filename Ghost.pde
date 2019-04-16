@@ -38,35 +38,58 @@ abstract class Ghost {
     return this.speed;
   }
   
-  public void render(color c) {
+  public void render(color c, PShape svg) {    
     if (this.mode == FRIGHTENED) {
       if (this.isReturning) {
-        fill(c, 70);
-        stroke(c, this.alpha);
+        if (USE_VIZ) {
+          shape(ghostEyesSvg, this.posn.x, this.posn.y, INCREMENT + 5, INCREMENT + 5);
+        } else {
+          fill(c, 70);
+          stroke(c, this.alpha); 
+        }
       } else {
         // Change ghost appearance
         if (floor(game.timer / 30) % 2 == 0) { 
-          fill(WHITE, this.alpha);
-          stroke(WHITE);
+          if (USE_VIZ) {
+            shape(frightenedGhost1, this.posn.x, this.posn.y, INCREMENT + 5, INCREMENT + 5);
+          } else {
+            fill(WHITE, this.alpha);
+            stroke(WHITE); 
+          }
         } else {
-          fill(BLUE, this.alpha);
-          stroke(BLUE); 
+          if (USE_VIZ) {
+            shape(frightenedGhost2, this.posn.x, this.posn.y, INCREMENT + 5, INCREMENT + 5);
+          } else {
+            fill(BLUE, this.alpha);
+            stroke(BLUE); 
+          }
         } 
       }
     } else {
       if (this.isReturning) {
-        fill(c, 70);
-        stroke(c, this.alpha);
+        if (USE_VIZ) {
+          shape(ghostEyesSvg, this.posn.x, this.posn.y, INCREMENT + 5, INCREMENT + 5);
+        } else {
+          fill(c, 70);
+          stroke(c, this.alpha); 
+        }
       } else {
-        fill(c, this.alpha);
-        stroke(c); 
+        if (USE_VIZ) {
+          shape(svg, this.posn.x, this.posn.y, INCREMENT + 5, INCREMENT + 5);
+        } else {
+          fill(c, this.alpha);
+          stroke(c);  
+        }
       }
     }
     
-    strokeWeight(2);
-    rect(this.posn.x, this.posn.y, INCREMENT, INCREMENT, INCREMENT, INCREMENT, 2, 2);
+    if (!USE_VIZ) {
+      strokeWeight(2);
+    
+      rect(this.posn.x, this.posn.y, INCREMENT, INCREMENT, INCREMENT, INCREMENT, 2, 2);
      
-    strokeWeight(3);
+      strokeWeight(3); 
+    }
     
     if (SHOW_PATHS) {
       for (Node n : this.path) {
@@ -181,6 +204,7 @@ abstract class Ghost {
     
     if (this.didHitPacman()) {
       if (!this.isReturning) {
+        SCORE += 10;
         this.isReturning = true;
         this.speed = 2;
         this.clampPosn();

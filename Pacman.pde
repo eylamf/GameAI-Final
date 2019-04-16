@@ -6,6 +6,7 @@ class Pacman {
   private PVector orientation;
   private boolean turnRequested;
   private String requestedDir;
+  private int timer;
   
   public Pacman() {
     this.reset();  
@@ -20,12 +21,37 @@ class Pacman {
     this.orientation = new PVector(-1, 0);
     this.turnRequested = false;
     this.requestedDir = "left";
+    this.timer = 0;
   }
   
   public void render() {
-    noStroke();
-    fill(YELLOW);
-    ellipse(this.posn.x, this.posn.y, INCREMENT, INCREMENT);
+    if (USE_VIZ) {
+      this.timer += 2;
+      
+      pushMatrix();
+      
+      
+      //if (this.isMovingRight()) {
+      //  rotate(radians(0));
+      //} else if (this.isMovingLeft()) {
+      //  rotate(radians(180));
+      //} else if (this.isMovingUp()) {
+      //  rotate(radians(270));
+      //} else if (this.isMovingDown()) {
+      //  rotate(radians(90));
+      //}
+      
+      if (floor(this.timer / 30) % 2 == 0) {
+        shape(pacmanCSvg, this.posn.x, this.posn.y, INCREMENT, INCREMENT);
+      } else {
+        shape(pacmanOSvg, this.posn.x, this.posn.y, INCREMENT, INCREMENT);
+      }
+      popMatrix();
+    } else {
+      noStroke();
+      fill(YELLOW);
+      ellipse(this.posn.x, this.posn.y, INCREMENT, INCREMENT);         
+    }
   }
   
   public void move() {

@@ -15,25 +15,30 @@ class Cell {
   }
   
   public void render() {
-    if (DEBUG) {
-      strokeWeight(1);
-      stroke(WHITE);
+    if (USE_VIZ) {
+      noFill();
+      noStroke();
     } else {
-      noStroke(); 
-    }
-    
-    if (this.isWall()) {
-      fill(BLUE);
-    } else {
+      if (DEBUG) {
+        strokeWeight(1);
+        stroke(WHITE);
+      } else {
+        noStroke(); 
+      }
       
-      if (this.isTurnBlock() || this.isEatenTurnBlock()) {
-        if (DEBUG) {
-          fill(RED); 
+      if (this.isWall()) {
+        fill(BLUE);
+      } else {
+        
+        if (this.isTurnBlock() || this.isEatenTurnBlock()) {
+          if (DEBUG) {
+            fill(RED); 
+          } else {
+            fill(BLACK); 
+          }
         } else {
           fill(BLACK); 
         }
-      } else {
-        fill(BLACK); 
       }
     }
     

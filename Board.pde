@@ -48,6 +48,10 @@ class Board {
   }
   
   public void render() {
+    if (USE_VIZ) {
+      shape(boardSvg, 0, 0);
+    }
+    
     for (int i = 0; i < this.numRows; i++) {
       for (int j = 0; j < this.numCols; j++) {
         this.grid[i][j].render(); 

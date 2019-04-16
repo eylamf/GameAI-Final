@@ -12,7 +12,7 @@ class Pinky extends Ghost {
   }
   
   public void render() {
-    super.render(PINK);
+    super.render(PINK, pinkySvg);
     
     if (this.path.isEmpty() && SCORE > 10 && this.mode == CHASING) {
       this.createPath(); 

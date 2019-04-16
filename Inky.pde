@@ -13,7 +13,7 @@ class Inky extends Ghost {
   }
   
   public void render() {
-    super.render(LIGHT_BLUE);
+    super.render(LIGHT_BLUE, inkySvg);
     
     if (this.path.isEmpty() && SCORE > 30 && this.mode == CHASING) {
       this.createPath(); 

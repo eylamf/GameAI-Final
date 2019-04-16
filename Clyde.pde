@@ -12,7 +12,7 @@ class Clyde extends Ghost {
   }
   
   public void render() {
-    super.render(ORANGE);
+    super.render(ORANGE, clydeSvg);
     
     if (this.path.isEmpty() && SCORE > 20 && this.mode == CHASING) {
       this.createPath(); 

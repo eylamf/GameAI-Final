@@ -26,21 +26,50 @@ public final color LIGHT_BLUE = color(94, 239, 249);
 
 public static final int FOUND = 1000;
 
+// Flag for debug mode
 boolean DEBUG = false;
+// Flag to show the ghost paths
 boolean SHOW_PATHS = true;
+// Flag to use IDA*
 boolean USE_IDA = false;
+// Flag to use illustrator visualizations
+boolean USE_VIZ = false;
 
 int SCORE = 0;
 int LIVES = 3;
 int GHOST_APPEARANCE_TIMER = 0;
-public ArrayList<Cell> POWER_PELLET_POSNS;
+ArrayList<Cell> POWER_PELLET_POSNS;
 
 Game game;
+
+// Visualizations
+PShape boardSvg;
+PShape pacmanOSvg;
+PShape pacmanCSvg;
+PShape blinkySvg;
+PShape pinkySvg;
+PShape clydeSvg;
+PShape inkySvg;
+PShape frightenedGhost1;
+PShape frightenedGhost2;
+PShape ghostEyesSvg;
 
 void setup() {
   //size(561, 621);
   size(561, 701);
-  frameRate(90);
+  frameRate(120);
+  
+  // Load SVGs
+  boardSvg = loadShape("board.svg");
+  pacmanOSvg = loadShape("pacman_open.svg");
+  pacmanCSvg = loadShape("pacman_closed.svg");
+  blinkySvg = loadShape("blinky.svg");
+  pinkySvg = loadShape("pinky.svg");
+  clydeSvg = loadShape("clyde.svg");
+  inkySvg = loadShape("inky.svg");
+  frightenedGhost1 = loadShape("frightened_ghost_1.svg");
+  frightenedGhost2 = loadShape("frightened_ghost_2.svg");
+  ghostEyesSvg = loadShape("ghost_eyes.svg");
   
   POWER_PELLET_POSNS = new ArrayList();
   POWER_PELLET_POSNS.add(new Cell(3, 1));
@@ -56,6 +85,7 @@ void draw() {
   translate(WIDTH / 2, HEIGHT / 2);
   rectMode(CENTER);
   ellipseMode(CENTER);
+  shapeMode(CENTER);
   
   game.render();
   
@@ -78,7 +108,9 @@ void keyPressed() {
     game.clampGhostPosns();
   } else if (key == 'p') {
     SHOW_PATHS = !SHOW_PATHS;
-  } else {
+  } else if (key == 'v') {
+    USE_VIZ = !USE_VIZ;
+  }else {
     game.pacman.onKey(); 
   }
 }

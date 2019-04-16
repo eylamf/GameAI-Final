@@ -13,7 +13,7 @@ class Blinky extends Ghost {
   }
   
   public void render() {
-    super.render(RED);
+    super.render(RED, blinkySvg);
     
     if (this.path.isEmpty()) {
       this.createPath(); 
