@@ -49,7 +49,6 @@ void setup() {
   POWER_PELLET_POSNS.add(new Cell(22, 26));
 
   game = new Game();
-  
 }
 
 void draw() {
@@ -60,18 +59,15 @@ void draw() {
   
   game.render();
   
-  textAlign(LEFT);
-  textSize(12);
-  fill(255);
+  this.displayScore();
+  this.displayAlgorithmUsed();
+  this.displayMode();
   
-  text("Score " + SCORE, (-WIDTH / 2) + INCREMENT, (700 / 2) - INCREMENT);
-  
-  textAlign(RIGHT);
-  if (USE_IDA) {
-    text("Using IDA*", (WIDTH / 2) - INCREMENT, (700 / 2) - INCREMENT);
-  } else {
-    text("Using A*", (WIDTH / 2) - INCREMENT, (700 / 2) - INCREMENT); 
-  }
+  Runtime runtime = Runtime.getRuntime();
+  runtime.gc();
+  long mem = (runtime.totalMemory() - runtime.freeMemory());
+  println(mem);
+  println(mem / (1024L * 1024L));
 }
 
 void keyPressed() {
@@ -262,4 +258,39 @@ public int idaSearch(ArrayList<Node> path, int g, int bound, int er, int ec) {
   }
   
   return min;
+}
+
+// Display score at bottom left
+private void displayScore() {
+  textAlign(LEFT);
+  textSize(12);
+  fill(WHITE);
+  
+  text("Score " + SCORE, (-WIDTH / 2) + INCREMENT, (700 / 2) - INCREMENT); 
+}
+
+private void displayMode() {
+  int mode = game.getMode();
+  String output;
+  
+  if (mode == CHASING) {
+    output = "Chasing"; 
+  } else if (mode == FRIGHTENED) {
+    output = "Frightened"; 
+  } else {
+    output = "Scatter";
+  }
+  
+  textAlign(LEFT);
+  text("Mode: " + output, (-WIDTH / 2) + INCREMENT, (700 / 2));
+}
+
+// Display algorithm at bottom right
+private void displayAlgorithmUsed() {
+  textAlign(RIGHT);
+  if (USE_IDA) {
+    text("Using IDA*", (WIDTH / 2) - INCREMENT, (700 / 2) - INCREMENT);
+  } else {
+    text("Using A*", (WIDTH / 2) - INCREMENT, (700 / 2) - INCREMENT); 
+  } 
 }
