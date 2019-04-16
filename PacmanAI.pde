@@ -27,6 +27,7 @@ public final color LIGHT_BLUE = color(94, 239, 249);
 public static final int FOUND = 1000;
 
 boolean DEBUG = false;
+boolean SHOW_PATHS = true;
 boolean USE_IDA = false;
 
 int SCORE = 0;
@@ -79,6 +80,8 @@ void keyPressed() {
   } else if (key == 'a') {
     USE_IDA = !USE_IDA;
     game.clampGhostPosns();
+  } else if (key == 'p') {
+    SHOW_PATHS = !SHOW_PATHS;
   } else {
     game.pacman.onKey(); 
   }

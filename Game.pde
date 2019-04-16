@@ -78,18 +78,18 @@ class Game {
       else if (this.mode == CHASING) {
         this.timer++;
         
-        // Switch to scatter after 8s of chasing
-        if (this.timer > 300) {
+        // Switch to scatter after 9s of chasing
+        if (this.timer > 900) {
           this.setMode(SCATTER);
           this.setGhostsMode(SCATTER);
           this.clampGhostPosns();
         }
       }
-      // Switch to chasing after 5s of scatter
+      // Switch to chasing after 6s of scatter
       else if (this.mode == SCATTER) {
         this.timer++; 
         
-        if (this.timer > 2000) {
+        if (this.timer > 600) {
           this.setMode(CHASING);
           this.setGhostsMode(CHASING);
           this.clampGhostPosns();
@@ -122,6 +122,8 @@ class Game {
     this.pinky.setMode(mode);
     this.clyde.setMode(mode);
     this.inky.setMode(mode);
+    
+    this.clampGhostPosns();
   }
   
   public void clampGhostPosns() {

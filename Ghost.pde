@@ -67,12 +67,15 @@ abstract class Ghost {
     rect(this.posn.x, this.posn.y, INCREMENT, INCREMENT, INCREMENT, INCREMENT, 2, 2);
      
     strokeWeight(3);
-    for (Node n : this.path) {
-      if (this.isReturning) {
-        n.renderPath(c, 70);
-      } else {
-        n.renderPath(c, this.alpha / 1.5); 
-      }
+    
+    if (SHOW_PATHS) {
+      for (Node n : this.path) {
+        if (this.isReturning) {
+          n.renderPath(c, 70);
+        } else {
+          n.renderPath(c, this.alpha / 1.5); 
+        }
+      } 
     }
   }
   
@@ -154,6 +157,11 @@ abstract class Ghost {
       if ((this.mode == FRIGHTENED && !this.isReturning) || this.mode == CHASING || this.mode == SCATTER) {
         game.pacman.reset();
         LIVES--;
+        
+        if (this.mode == CHASING) {
+          game.setMode(SCATTER);
+          game.setGhostsMode(SCATTER);
+        }
       }
     }
   }
@@ -340,14 +348,10 @@ abstract class Ghost {
   public void setMode(int m) {
     this.mode = m;
     
-    if (m == CHASING || m == SCATTER) {
+    if (this.isReturning) {
+      this.speed = 2;
+    } else {
       this.speed = 1; 
-    } else if (m == FRIGHTENED) {
-      if (this.isReturning) {
-        this.speed = 2;
-      } else {
-        this.speed = 1; 
-      }
     }
   }
 }
