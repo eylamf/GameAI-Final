@@ -36,11 +36,15 @@ boolean USE_IDA = false;
 boolean USE_VIZ = true;
 // Flag for resume/pause
 boolean PAUSE = false;
+// Flag for memory
+boolean SHOW_MEM = false;
 
 int SCORE = 0;
 int LIVES = 3;
 int GHOST_APPEARANCE_TIMER = 0;
 ArrayList<Cell> POWER_PELLET_POSNS;
+Runtime runtime;
+int memoryResetTimer;
 
 Game game;
 
@@ -61,7 +65,7 @@ PShape ghostEyesSvg;
 
 void setup() {
   //size(561, 621);
-  size(561, 701);
+  size(561, 731);
   frameRate(100);
   
   // Load SVGs
@@ -84,6 +88,10 @@ void setup() {
   POWER_PELLET_POSNS.add(new Cell(3, 26));
   POWER_PELLET_POSNS.add(new Cell(22, 1));
   POWER_PELLET_POSNS.add(new Cell(22, 26));
+  
+  memoryResetTimer = 0;
+  runtime = Runtime.getRuntime();
+  runtime.gc();
 
   game = new Game();
 }
@@ -97,16 +105,32 @@ void draw() {
   
   game.render();
   
+  if (SHOW_MEM) {
+    if (runtime == null) {
+      runtime = Runtime.getRuntime();
+      runtime.gc();
+    }
+    
+    memoryResetTimer++;
+    
+    // Update every ~10s to avoid super bad performance
+    if (memoryResetTimer > 1000) {
+      runtime = Runtime.getRuntime();
+      runtime.gc();
+    }
+  } else {
+    // Reset runtime and timer
+    if (runtime != null) {
+      runtime = null;
+      memoryResetTimer = 0;
+    }
+  }
+  
   this.displayScore();
   this.displayLives();
   this.displayAlgorithmUsed();
   this.displayMode();
-  
-  //Runtime runtime = Runtime.getRuntime();
-  //runtime.gc();
-  //long mem = (runtime.totalMemory() - runtime.freeMemory());
-  //println(mem);
-  //println(mem / (1024L * 1024L));
+  this.displayMem();
 }
 
 void keyPressed() {
@@ -123,7 +147,9 @@ void keyPressed() {
   // Space - Resume/Pause
   else if (key == ' ') {
     PAUSE = !PAUSE;
-  } else {
+  } else if (key == 'm') {
+    SHOW_MEM = !SHOW_MEM;
+  }else {
     game.pacman.onKey(); 
   }
 }
@@ -346,4 +372,16 @@ private void displayAlgorithmUsed() {
   } else {
     text("Using A*", (WIDTH / 2) - INCREMENT, (700 / 2) - INCREMENT); 
   } 
+}
+
+private void displayMem() {
+  textAlign(LEFT);
+  if (SHOW_MEM) {
+    // Calculate used memory
+    long mem = (runtime.totalMemory() - runtime.freeMemory());
+    long memAsMegabytes = mem / (1024L * 1024L);
+    
+    text("Memory: " + mem, (-WIDTH / 2) + INCREMENT, (700 / 2) + INCREMENT);
+    text("Memory in megabytes: " + memAsMegabytes, (-WIDTH / 2) + INCREMENT, (700 / 2) + (INCREMENT * 2));
+  }
 }
