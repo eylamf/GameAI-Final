@@ -381,7 +381,8 @@ private void displayMem() {
     long mem = (runtime.totalMemory() - runtime.freeMemory());
     long memAsMegabytes = mem / (1024L * 1024L);
     
-    text("Memory: " + mem, (-WIDTH / 2) + INCREMENT, (700 / 2) + INCREMENT);
+    // Bytes
+    text("Memory in bytes: " + mem, (-WIDTH / 2) + INCREMENT, (700 / 2) + INCREMENT);
     text("Memory in megabytes: " + memAsMegabytes, (-WIDTH / 2) + INCREMENT, (700 / 2) + (INCREMENT * 2));
   }
 }
