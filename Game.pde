@@ -27,80 +27,82 @@ class Game {
     this.inky.render();
     this.pacman.render();
     
-    if (LIVES > 0) {
-      this.pacman.move();
-      this.blinky.move();
-      
-      if (SCORE > 10) {
-        if (this.pinky.getIsActive()) {
-          this.pinky.move();  
-        } else {
-          if (this.pinky.mode == CHASING) {
-            this.pinky.move(); 
+    if (!PAUSE) {
+      if (LIVES > 0) {
+        this.pacman.move();
+        this.blinky.move();
+        
+        if (SCORE > 10) {
+          if (this.pinky.getIsActive()) {
+            this.pinky.move();  
+          } else {
+            if (this.pinky.mode == CHASING) {
+              this.pinky.move(); 
+            }
           }
         }
-      }
-      
-      if (SCORE > 20) {
-        if (this.clyde.getIsActive()) {
-          this.clyde.move();  
-        } else {
-          if (this.clyde.mode == CHASING) {
-            this.clyde.move(); 
+        
+        if (SCORE > 20) {
+          if (this.clyde.getIsActive()) {
+            this.clyde.move();  
+          } else {
+            if (this.clyde.mode == CHASING) {
+              this.clyde.move(); 
+            }
           }
         }
-      }
-      
-      if (SCORE > 30) {
-        if (this.inky.getIsActive()) {
-          this.inky.move();  
-        } else {
-          if (this.inky.mode == CHASING) {
-            this.inky.move(); 
-          }
-        } 
-      }
-      
-      // Frightened timer
-      if (this.mode == FRIGHTENED) {
-        this.timer++;
-      
-        // Frightened mode lasts for 7s
-        if (this.timer > 700) {
-          this.mode = CHASING;
-          this.setGhostsMode(CHASING);
-          this.timer = 0; 
+        
+        if (SCORE > 30) {
+          if (this.inky.getIsActive()) {
+            this.inky.move();  
+          } else {
+            if (this.inky.mode == CHASING) {
+              this.inky.move(); 
+            }
+          } 
+        }
+        
+        // Frightened timer
+        if (this.mode == FRIGHTENED) {
+          this.timer++;
+        
+          // Frightened mode lasts for 7s
+          if (this.timer > 700) {
+            this.mode = CHASING;
+            this.setGhostsMode(CHASING);
+            this.timer = 0; 
+            
+            this.clampGhostPosns();
+          } 
+        }
+        // Scatter timer
+        else if (this.mode == CHASING) {
+          this.timer++;
           
-          this.clampGhostPosns();
-        } 
-      }
-      // Scatter timer
-      else if (this.mode == CHASING) {
-        this.timer++;
-        
-        // Switch to scatter after 9s of chasing
-        if (this.timer > 900) {
-          this.setMode(SCATTER);
-          this.setGhostsMode(SCATTER);
-          this.clampGhostPosns();
+          // Switch to scatter after 10s of chasing
+          if (this.timer > 1000) {
+            this.setMode(SCATTER);
+            this.setGhostsMode(SCATTER);
+            this.clampGhostPosns();
+          }
         }
-      }
-      // Switch to chasing after 6s of scatter
-      else if (this.mode == SCATTER) {
-        this.timer++; 
-        
-        if (this.timer > 600) {
-          this.setMode(CHASING);
-          this.setGhostsMode(CHASING);
-          this.clampGhostPosns();
+        // Switch to chasing after 7s of scatter
+        else if (this.mode == SCATTER) {
+          this.timer++; 
+          
+          if (this.timer > 700) {
+            this.setMode(CHASING);
+            this.setGhostsMode(CHASING);
+            this.clampGhostPosns();
+          }
         }
-      }
-      
-    } else {
-      fill(RED);
-      textAlign(CENTER);
-      textSize(24);
-      text("GAME OVER", 0, 0);
+        
+      } else {
+        fill(RED);
+        textAlign(CENTER);
+        textSize(24);
+        text("GAME OVER", 0, 0);
+      } 
     }
   }
   

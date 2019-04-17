@@ -28,25 +28,21 @@ class Pacman {
     if (USE_VIZ) {
       this.timer += 2;
       
-      pushMatrix();
-      
-      
-      //if (this.isMovingRight()) {
-      //  rotate(radians(0));
-      //} else if (this.isMovingLeft()) {
-      //  rotate(radians(180));
-      //} else if (this.isMovingUp()) {
-      //  rotate(radians(270));
-      //} else if (this.isMovingDown()) {
-      //  rotate(radians(90));
-      //}
-      
       if (floor(this.timer / 30) % 2 == 0) {
         shape(pacmanCSvg, this.posn.x, this.posn.y, INCREMENT, INCREMENT);
       } else {
-        shape(pacmanOSvg, this.posn.x, this.posn.y, INCREMENT, INCREMENT);
+        if (this.isMovingRight()) {
+          shape(pacmanORSvg, this.posn.x, this.posn.y, INCREMENT, INCREMENT);
+        } else if (this.isMovingLeft()) {
+          shape(pacmanOLSvg, this.posn.x, this.posn.y, INCREMENT, INCREMENT); 
+        } else if (this.isMovingUp()) {
+          shape(pacmanOUSvg, this.posn.x, this.posn.y, INCREMENT, INCREMENT);
+        } else if (this.isMovingDown()) {
+          shape(pacmanODSvg, this.posn.x, this.posn.y, INCREMENT, INCREMENT);
+        } else {
+          shape(pacmanCSvg, this.posn.x, this.posn.y, INCREMENT, INCREMENT);
+        }
       }
-      popMatrix();
     } else {
       noStroke();
       fill(YELLOW);

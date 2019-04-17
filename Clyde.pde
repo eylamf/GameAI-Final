@@ -27,10 +27,14 @@ class Clyde extends Ghost {
     return Math.abs(this.row - game.pacman.row) + Math.abs(this.col - game.pacman.col) <= 8;
   }
   
+  private boolean isAtCorner() {
+    return this.row == 29 && this.col == 1; 
+  }
+  
   @Override
   public void createPath() {
     if (this.isOnCell()) {
-      if (this.isLessThanEightAway()) {
+      if (this.isLessThanEightAway() && !this.isAtCorner()) {
         if (USE_IDA) {
           this.path = idaStar(this.row, this.col, 29, 1);
         } else {

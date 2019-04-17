@@ -29,11 +29,13 @@ public static final int FOUND = 1000;
 // Flag for debug mode
 boolean DEBUG = false;
 // Flag to show the ghost paths
-boolean SHOW_PATHS = true;
+boolean SHOW_PATHS = false;
 // Flag to use IDA*
 boolean USE_IDA = false;
 // Flag to use illustrator visualizations
-boolean USE_VIZ = false;
+boolean USE_VIZ = true;
+// Flag for resume/pause
+boolean PAUSE = false;
 
 int SCORE = 0;
 int LIVES = 3;
@@ -44,7 +46,10 @@ Game game;
 
 // Visualizations
 PShape boardSvg;
-PShape pacmanOSvg;
+PShape pacmanORSvg;
+PShape pacmanOLSvg;
+PShape pacmanOUSvg;
+PShape pacmanODSvg;
 PShape pacmanCSvg;
 PShape blinkySvg;
 PShape pinkySvg;
@@ -57,11 +62,14 @@ PShape ghostEyesSvg;
 void setup() {
   //size(561, 621);
   size(561, 701);
-  frameRate(120);
+  frameRate(100);
   
   // Load SVGs
   boardSvg = loadShape("board.svg");
-  pacmanOSvg = loadShape("pacman_open.svg");
+  pacmanORSvg = loadShape("pacman_open_r.svg");
+  pacmanOLSvg = loadShape("pacman_open_l.svg");
+  pacmanODSvg = loadShape("pacman_open_d.svg");
+  pacmanOUSvg = loadShape("pacman_open_u.svg");
   pacmanCSvg = loadShape("pacman_closed.svg");
   blinkySvg = loadShape("blinky.svg");
   pinkySvg = loadShape("pinky.svg");
@@ -90,14 +98,15 @@ void draw() {
   game.render();
   
   this.displayScore();
+  this.displayLives();
   this.displayAlgorithmUsed();
   this.displayMode();
   
-  Runtime runtime = Runtime.getRuntime();
-  runtime.gc();
-  long mem = (runtime.totalMemory() - runtime.freeMemory());
-  println(mem);
-  println(mem / (1024L * 1024L));
+  //Runtime runtime = Runtime.getRuntime();
+  //runtime.gc();
+  //long mem = (runtime.totalMemory() - runtime.freeMemory());
+  //println(mem);
+  //println(mem / (1024L * 1024L));
 }
 
 void keyPressed() {
@@ -110,7 +119,11 @@ void keyPressed() {
     SHOW_PATHS = !SHOW_PATHS;
   } else if (key == 'v') {
     USE_VIZ = !USE_VIZ;
-  }else {
+  }
+  // Space - Resume/Pause
+  else if (key == ' ') {
+    PAUSE = !PAUSE;
+  } else {
     game.pacman.onKey(); 
   }
 }
@@ -301,6 +314,14 @@ private void displayScore() {
   text("Score " + SCORE, (-WIDTH / 2) + INCREMENT, (700 / 2) - INCREMENT); 
 }
 
+private void displayLives() {
+  textAlign(LEFT);
+  textSize(12);
+  fill(WHITE);
+  
+  text("Lives " + LIVES, (-WIDTH / 2) + INCREMENT, (700 / 2)); 
+}
+
 private void displayMode() {
   int mode = game.getMode();
   String output;
@@ -313,8 +334,8 @@ private void displayMode() {
     output = "Scatter";
   }
   
-  textAlign(LEFT);
-  text("Mode: " + output, (-WIDTH / 2) + INCREMENT, (700 / 2));
+  textAlign(RIGHT);
+  text("Mode: " + output, (WIDTH / 2) - INCREMENT, (700 / 2));
 }
 
 // Display algorithm at bottom right

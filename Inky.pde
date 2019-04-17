@@ -23,6 +23,7 @@ class Inky extends Ghost {
   @Override
   public void createPath() {
     if (this.isOnCell()) {
+      
       PVector blinkyDiff = new PVector(game.pacman.posn.x - game.blinky.posn.x, game.pacman.posn.y - game.blinky.posn.y);
       PVector dest = new PVector(game.pacman.posn.x + blinkyDiff.x, game.pacman.posn.y + blinkyDiff.y);
       
@@ -31,11 +32,15 @@ class Inky extends Ghost {
       
       Cell closest = this.getClosestToDest(dest.x, dest.y);
       
+      if (dest.x > (width / 2) || dest.y > (HEIGHT / 2)) {
+        closest = game.board.getCellAt(game.pacman.row, game.pacman.col); 
+      }
+      
       if (closest != null) {
         r = closest.row;
         c = closest.col;
       }
-  
+      
       if (USE_IDA) {
         this.path = idaStar(this.row, this.col, r, c);
       } else {
@@ -82,6 +87,12 @@ class Inky extends Ghost {
   private Cell getClosestToDest(float x, float y) {
     float minDist = Float.MAX_VALUE;
     Cell cell = null;
+    
+    if (x > WIDTH || y > HEIGHT) {
+      println("GREATER");
+      cell = game.board.getCellAt(game.pacman.row, game.pacman.col);
+      return cell;
+    }
     
     for (int r = 0; r < game.board.numRows; r++) {
       for (int c = 0; c < game.board.numCols; c++) {
